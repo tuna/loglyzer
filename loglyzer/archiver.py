@@ -34,7 +34,7 @@ class LogArchiver(BaseLogProcessor):
         gevent.spawn(self._write_log)
 
     def _open_log(self):
-        self.f = FileObject(open(self._aof_file, 'ab'), 'ab')
+        self.f = FileObject(open(self._aof_file, 'a+'), 'a+')
 
     def compress(self, date):
         self.f.close()
@@ -69,6 +69,7 @@ class LogArchiver(BaseLogProcessor):
             self.f.write(entry['msg'])
             if not entry['msg'].endswith('\n'):
                 self.f.write('\n')
+            self.f.flush()
 
     def push(self, entry):
         self.queue.put(entry)
