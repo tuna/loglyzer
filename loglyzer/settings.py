@@ -61,6 +61,24 @@ OUTPUT_INFO = {
     },
 }
 
+REDIS_HOST = ""
+REDIS_PORT = 6379
+REDIS_DB = 0
+
+REDIS_FWD_PREFIX = "lgfwd_"
+
+CHANNELS = ('nginx', 'rsync', )
+
+LOG_PROCESSORS = {
+    'nginx': [
+        {'type': 'archive', 'local_dir': "/var/log/archive/nginx"},
+    ],
+    'rsync': [
+        {'type': 'archive', 'local_dir': "/var/log/archive/rsync"},
+    ],
+}
+
+
 try:
     from settings_local import *
 except:
