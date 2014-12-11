@@ -13,13 +13,14 @@ class RedisReceiver(object):
         self.channels = {}
 
     def register(self, cname, processor):
-        if cname not in self.channels:
-            self.channels[cname] = [processor, ]
+        bname = self._prefix + "buf_" + cname
+        if bname not in self.channels:
+            self.channels[bname] = [processor, ]
         else:
-            self.channels[cname].append(processor)
+            self.channels[bname].append(processor)
 
     def poll(self):
-        keys = [self._prefix + "buf_" + k for k in self.channels]
+        keys = self.channels.keys()
         while 1:
             cname, jmsg = self.r.blpop(keys)
             msg = json.loads(jmsg)
