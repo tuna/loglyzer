@@ -48,7 +48,8 @@ class SystemdJournalCollector(BaseCollector):
             msg = json.loads(line)
             return process_line_func({
                 'name': self.cname,
-                't': msg['__REALTIME_TIMESTAMP'],
+                't': datetime.fromtimestamp(
+                    float(msg['__REALTIME_TIMESTAMP'])/1000000),
                 'pid': msg['_PID'],
                 'msg': msg['MESSAGE']
             })

@@ -36,7 +36,7 @@ class RedisForwarder(BaseForwarder):
     def process_line(self, line):
         cname = line['name']
         buf = self._prefix + "buf_" + cname
-        line['t'] = line['t'].strftime("%s.%f")
+        line['t'] = float(line['t'].strftime("%s.%f"))
 
         self.r.rpush(buf, json.dumps(line))
 

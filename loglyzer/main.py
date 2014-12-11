@@ -13,7 +13,7 @@ def main():
         settings.REDIS_HOST,
         settings.REDIS_PORT,
         settings.REDIS_DB,
-        settings.REDIS_PREFIX)
+        settings.REDIS_FWD_PREFIX)
 
     for cname, processors in settings.LOG_PROCESSORS.items():
         for p in processors:

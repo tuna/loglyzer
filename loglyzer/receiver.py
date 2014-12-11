@@ -19,11 +19,11 @@ class RedisReceiver(object):
             self.channels[cname].append(processor)
 
     def poll(self):
-        keys = self.channels.keys()
+        keys = [self._prefix + "buf_" + k for k in self.channels]
         while 1:
             cname, jmsg = self.r.blpop(keys)
             msg = json.loads(jmsg)
-            msg['t'] = datetime.strptime(msg['t'], "%s.%f")
+            msg['t'] = datetime.fromtimestamp(float(msg['t']))
 
             if cname not in self.channels:
                 continue
