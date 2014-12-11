@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 import sh
+import json
 from datetime import datetime
 
 
@@ -36,26 +37,24 @@ class FileCollector(BaseCollector):
 class SystemdJournalCollector(BaseCollector):
 
     def __init__(self, cname, unitname):
-        import systemd.journal
         self.cname = cname
         self.unitname = unitname
-        self.reader = systemd.journal.Reader()
-        self.reader.this_boot()
-        self.reader.log_level(systemd.journal.LOG_INFO)
-        self.reader.add_match(_SYSTEMD_UNIT=self.unitname)
 
     def follow(self, process_line_func):
-        now = datetime.now()
-        self.reader.seek_realtime(now)
-        while 1:
-            self.reader.wait()
-            for line in self.reader:
-                process_line_func({
-                    'name': self.cname,
-                    't': line['__REALTIME_TIMESTAMP'],
-                    'pid': line['_PID'],
-                    'msg': line['MESSAGE']
-                })
+        def ignore(*args):
+            pass
+
+        def _process(line):
+            msg = json.loads(line)
+            return process_line_func({
+                'name': self.cname,
+                't': msg['__REALTIME_TIMESTAMP'],
+                'pid': msg['_PID'],
+                'msg': msg['MESSAGE']
+            })
+            p = sh.journalctl('-f', '--lines=0', '--output=json',
+                              '-u', self.unitname, _out=_process, _err=ignore)
+            p.wait()
 
 
 # vim: ts=4 sw=4 sts=4 expandtab

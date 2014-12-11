@@ -34,7 +34,7 @@ class RedisForwarder(BaseForwarder):
         self.r.publish(self._prefix+"events", "NEW_COLLECTOR")
 
     def process_line(self, line):
-        cname = line['cname']
+        cname = line['name']
         buf = self._prefix + "buf_" + cname
         line['t'] = line['t'].strftime("%s.%f")
 
