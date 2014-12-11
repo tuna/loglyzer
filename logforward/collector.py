@@ -53,9 +53,10 @@ class SystemdJournalCollector(BaseCollector):
                 'pid': msg['_PID'],
                 'msg': msg['MESSAGE']
             })
-            p = sh.journalctl('-f', '--lines=0', '--output=json',
-                              '-u', self.unitname, _out=_process, _err=ignore)
-            p.wait()
+
+        p = sh.journalctl('-f', '--lines=0', '--output=json',
+                          '-u', self.unitname, _out=_process, _err=ignore)
+        p.wait()
 
 
 # vim: ts=4 sw=4 sts=4 expandtab
