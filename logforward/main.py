@@ -11,7 +11,7 @@ def main():
 
     collectors = []
 
-    for cname, log_source in settings.LOG_SOURCES:
+    for cname, log_source in settings.LOG_SOURCES.items():
         if log_source['type'] == "file":
             collectors.append(FileCollector(cname, log_source['filename']))
         elif log_source['type'] == "systemd-journal":

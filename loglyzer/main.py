@@ -15,7 +15,7 @@ def main():
         settings.REDIS_DB,
         settings.REDIS_PREFIX)
 
-    for cname, processors in settings.LOG_PROCESSORS:
+    for cname, processors in settings.LOG_PROCESSORS.items():
         for p in processors:
             t = p.pop('type')
             if t == "archive":
